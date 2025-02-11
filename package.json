@@ -1,0 +1,56 @@
+{
+  "name": "chole_pump",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"ts-node -r tsconfig-paths/register server.ts\"",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "jest"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    },
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1"
+    },
+    "setupFiles": [
+      "dotenv/config"
+    ]
+  },
+  "dependencies": {
+    "@metaplex-foundation/js": "^0.20.1",
+    "@solana/web3.js": "^1.98.0",
+    "@triton-one/yellowstone-grpc": "^0.3.0",
+    "dotenv": "^16.4.7",
+    "mongoose": "^8.10.0",
+    "next": "15.1.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3",
+    "@jest/globals": "^29.7.0",
+    "@metaplex-foundation/mpl-token-metadata": "^2.13.0",
+    "@types/jest": "^29.5.14",
+    "@types/node": "^20.17.17",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "bs58": "^6.0.0",
+    "concurrently": "^9.1.2",
+    "eslint": "^9",
+    "eslint-config-next": "15.1.6",
+    "jest": "^29.7.0",
+    "postcss": "^8",
+    "supertest": "^7.0.0",
+    "tailwindcss": "^3.4.1",
+    "ts-jest": "^29.2.5",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.7.3"
+  }
+}
