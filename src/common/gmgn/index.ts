@@ -1,28 +1,32 @@
-import { PumpCoin, PumpDetail } from "@/common/types/pump"
+import { PumpDetail } from "@/common/types/pump";
 
-
-
-export async function getPumpList(): Promise<PumpCoin[]> {
-    const res = await fetch("https://gmgn.ai/defi/quotation/v1/rank/sol/pump?limit=50&orderby=progress&direction=desc&pump=true", { cache: "no-store" })
-    // 打印响应状态码和响应内容
-    if (!res.ok) {
-        const text = await res.text();  // 获取原始文本
-        console.error("Error response:", text); // 打印错误内容
-        throw new Error(`Request failed with status ${res.status}`);
-    }
-    const data = await res.json()
-
-    if (data.code === 0) {
-        return data.data.rank
-    }
-    return []
+async function launchBrowser() {
+    const puppeteer = (await import("puppeteer")).default; // 仅在服务器端加载
+    return puppeteer.launch({
+        headless: true,
+        args: ["--no-sandbox", "--disable-setuid-sandbox"]
+    });
 }
 
-export async function getPumpDetail(addr: string): Promise<PumpDetail> {
-    const res = await fetch(`https://gmgn.ai/defi/quotation/v1/tokens/sol/${addr}`)
-    const data = await res.json()
-    if (data.code === 0) {
-        return data.data.token
+
+
+export async function getPumpDetail(addr: string): Promise<PumpDetail | null> {
+    try {
+        const url = `https://gmgn.ai/_next/data/nVVbQMQ7NG3pcNQYxV0Gs/sol/token/${addr}.json?chain=sol&token=${addr}`;
+        const browser = await launchBrowser();
+        const page = await browser.newPage();
+
+        await page.setUserAgent(
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+        );
+
+        await page.goto(url, { waitUntil: "networkidle2" });
+        const content = await page.evaluate(() => document.body.innerText);
+        await browser.close();
+
+        return JSON.parse(content);
+    } catch (error) {
+        console.error("Puppeteer error:", error);
+        return null;
     }
-    return {} as PumpDetail
 }
